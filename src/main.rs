@@ -22,10 +22,7 @@ fn main() {
 
     let file_path = &args[1]; // file path is first argument
     let command = &args[2]; // command is second argument
-
-
-    let mut max_clique: Vec<usize> = Vec::new(); // create vector to hold max clique
-
+    let max_clique: Vec<usize>;
     let res = file_operations::read_graph_file(file_path);
 
     match res {
@@ -35,7 +32,7 @@ fn main() {
             }
         
             else if command == "OG" { // If original command perform original algorithm
-                original_algorithm::perform();
+                max_clique = original_algorithm::perform(&v);
             }
         
             else if command == "VC" { // If brute force command perform brute force algorithm
