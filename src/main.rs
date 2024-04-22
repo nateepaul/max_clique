@@ -23,30 +23,36 @@ fn main() {
     let file_path = &args[1]; // file path is first argument
     let command = &args[2]; // command is second argument
 
-    let graph: Vec<Vec<usize>>; // create graph vector
 
-    if let Err(graph) = file_operations::read_graph_file(file_path) {
-        println!("{}", file_path);
-        println!("Error reading file. Check file name and contents.");
-        return;
-    }
+    let mut max_clique: Vec<usize> = Vec::new(); // create vector to hold max clique
 
-    if command == "BF" { // If brute force command perform brute force algorithm
-        brute_force_algorithm::perform();
-    }
+    let res = file_operations::read_graph_file(file_path);
 
-    else if command == "OG" { // If original command perform original algorithm
-        original_algorithm::perform();
-    }
-
-    else if command == "VC" { // If brute force command perform brute force algorithm
-        vertex_cover_algorithm::perform();
-    }
-
-    else { // Else print correct usage
-        println!("Wrong Arguments: Expected usage is a command \"BF, OG, VC\" to
-        call the brute force, orginal, and vertex cover algorithims followed by name of the
-        graph file");
-        return;
+    match res {
+        Ok(v) => {
+            if command == "BF" { // If brute force command perform brute force algorithm
+                max_clique = brute_force_algorithm::perform(&v);
+            }
+        
+            else if command == "OG" { // If original command perform original algorithm
+                original_algorithm::perform();
+            }
+        
+            else if command == "VC" { // If brute force command perform brute force algorithm
+                max_clique = vertex_cover_algorithm::perform(&v);
+            }
+        
+            else { // Else print correct usage
+                println!("Wrong Arguments: Expected usage is a command \"BF, OG, VC\" to
+                call the brute force, orginal, and vertex cover algorithims followed by name of the
+                graph file");
+                return;
+            }
+        
+            if let Err(err) = file_operations::write_clique_to_file(&max_clique) { // if there is an error writing to the file print error, else write to file
+                println!("Error writing to file: {}", err); // print error
+            }
+        },
+        Err(e) => println!("Error {}", e),
     }
 }

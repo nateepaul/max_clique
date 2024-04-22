@@ -19,6 +19,16 @@ pub mod file_operations {
   
         Ok(generate_symmetric_matrix(&matrix)) // return matrix if successful
     }
+
+    pub fn write_clique_to_file(clique: &Vec<usize>) -> io::Result<()> {
+        let filename = format!("S{}_nepaul.sol", clique.len());
+        
+        let mut file = File::create(filename)?; // create file with file name
+        for node in clique { // loop through nodes in best path
+            writeln!(&mut file, "{}", node)?; // write the node to the file
+        }
+        Ok(()) // check for error
+    }
     
     fn generate_symmetric_matrix(lower_half: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
         let size = lower_half.len(); // set size to length of given matrix
